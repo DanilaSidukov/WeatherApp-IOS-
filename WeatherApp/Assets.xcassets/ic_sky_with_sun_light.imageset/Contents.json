@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ic_sky_with_sun_light.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
