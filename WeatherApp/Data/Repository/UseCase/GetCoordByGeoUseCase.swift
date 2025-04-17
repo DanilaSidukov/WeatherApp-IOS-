@@ -7,7 +7,7 @@ class GetCoordByGeoUseCase: GetCoordByGeoUseCaseProtocol {
         
     }
     
-    func execute(city: String) async throws -> LocationAndCoord {
+    func execute(city: String) async throws -> Response<LocationAndCoord> {
         return try await LocationRepository.shared.getLocationCoord(city: city)
     }
 }

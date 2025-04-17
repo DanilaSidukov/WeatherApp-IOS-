@@ -1,10 +1,16 @@
 import Foundation
 import SwiftUI
 
+protocol TextFieldAlertDelegate {
+    
+    func onTextInput(text: String)
+}
+
 final class TextFieldAlert: UIAlertController {
     
-    convenience init(didTextInput: ((String?) -> Void)? = nil) {
-        
+    convenience init(
+        delegate: TextFieldAlertDelegate,
+    ) {
         self.init(
             title: stringRes("add_location"),
             message: nil,
@@ -13,7 +19,7 @@ final class TextFieldAlert: UIAlertController {
         self.addAction(
             UIAlertAction(title: stringRes("add"), style: .default) { _ in
                 if let text = self.textFields!.first?.text {
-                    didTextInput?(text)
+                    delegate.onTextInput(text: text)
                 }
             }
         )

@@ -22,7 +22,7 @@ class LocationCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        self.backgroundColor = .baseBackground
+        self.backgroundColor = .clear
         
         self.addSubview(cardView)
         cardView.translatesAutoresizingMaskIntoConstraints = false

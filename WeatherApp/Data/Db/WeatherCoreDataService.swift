@@ -41,7 +41,7 @@ final class WeatherCoreDataService {
         }
     }
     
-    func addLocation(locationData: LocationData) {
+    func addLocation(locationData: LocationData) throws {
         let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "location == %@", locationData.location ?? stringRes("unknown"))
         
@@ -54,15 +54,40 @@ final class WeatherCoreDataService {
                 location.temperature = locationData.temperature
                 location.temperatureRange = locationData.temperatureRange
                 location.weatherIcon = locationData.weatherIcon
+                location.latitude = locationData.latitude
+                location.longitude = locationData.longitude
                 
                 saveContext()
                 getAllLocations()
                 deselectPreviousLocations(except: location.location)
             } else {
-                print("Location \(String(describing: locationData.location)) already exist in db")
+                log.info("Location \(String(describing: locationData.location)) already exist in db")
             }
         } catch {
-            print("Error while checking location: \(error.localizedDescription)")
+            log.info("Error while checking location: \(error.localizedDescription)")
+        }
+    }
+    
+    func updateLocation(locationData: LocationData) {
+        let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+
+        fetchRequest.predicate = NSPredicate(
+            format: "latitude == %@ AND longitude == %@",
+            NSNumber(floatLiteral: locationData.latitude),
+            NSNumber(floatLiteral: locationData.longitude)
+        )
+
+        do {
+            if let existingLocation = try context.fetch(fetchRequest).first {
+                existingLocation.temperature = locationData.temperature
+                existingLocation.temperatureRange = locationData.temperatureRange
+                existingLocation.weatherIcon = locationData.weatherIcon
+                saveContext()
+            } else {
+                log.info("Location \(locationData.location ?? "Unknown") doesn't exist in DB")
+            }
+        } catch {
+            log.info("Error while fetching location: \(error.localizedDescription)")
         }
     }
     

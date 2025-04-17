@@ -5,7 +5,7 @@ class GetLocationByCoordUseCase: GetLocationByCoordUseCaseProtocol {
         
     }
     
-    func execute(locationName: String?, lat: Double, long: Double) async throws -> LocationData {
-        return try await LocationRepository.shared.getLocationData(locationName: locationName, lat: lat, long: long)
+    func execute(locationName: String?, lat: Double, long: Double) async -> Response<LocationData> {
+        return await LocationRepository.shared.getLocationData(locationName: locationName, lat: lat, long: long)
     }
 }

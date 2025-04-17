@@ -21,6 +21,8 @@ extension Location {
     @NSManaged var temperature: String?
     @NSManaged var temperatureRange: String?
     @NSManaged var weatherIcon: String?
+    @NSManaged var latitude: Double
+    @NSManaged var longitude: Double
 
 }
 

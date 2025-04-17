@@ -1,7 +1,7 @@
 
 protocol LocationRepositoryProtocol {
     
-    func getLocationCoord(city: String) async throws -> LocationAndCoord
+    func getLocationCoord(city: String) async throws -> Response<LocationAndCoord>
     
-    func getLocationData(locationName: String?, lat: Double, long: Double) async throws -> LocationData
+    func getLocationData(locationName: String?, lat: Double, long: Double) async throws -> Response<LocationData>
 }

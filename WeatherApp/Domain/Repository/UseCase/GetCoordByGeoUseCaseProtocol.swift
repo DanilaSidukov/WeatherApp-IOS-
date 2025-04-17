@@ -1,5 +1,5 @@
 
 protocol GetCoordByGeoUseCaseProtocol {
     
-    func execute(city: String) async throws -> LocationAndCoord
+    func execute(city: String) async throws -> Response<LocationAndCoord>
 }

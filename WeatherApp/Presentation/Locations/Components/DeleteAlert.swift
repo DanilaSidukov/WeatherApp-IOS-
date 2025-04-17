@@ -1,11 +1,18 @@
 import Foundation
 import SwiftUI
 
+protocol DeleteAlertDelegate {
+    
+    func onPositiveClick(press: CGPoint)
+    
+    func onNegativeClick()
+}
+
 final class DeleteAlert: UIAlertController {
     
     convenience init(
-        onPositiveClick: (() -> Void)? = nil,
-        onNegativeClick: (() -> Void)? = nil
+        delegate: DeleteAlertDelegate,
+        press: CGPoint
     ) {
         self.init(
             title: stringRes("delete_location"),
@@ -14,12 +21,12 @@ final class DeleteAlert: UIAlertController {
         )
         self.addAction(
             UIAlertAction(title: stringRes("yes"), style: .destructive) { _ in
-                onPositiveClick?()
+                delegate.onPositiveClick(press: press)
             }
         )
         self.addAction(
             UIAlertAction(title: stringRes("no"), style: .cancel) { _ in
-                onNegativeClick?()
+                delegate.onNegativeClick()
             }
         )
     }
