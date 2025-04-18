@@ -4,19 +4,19 @@ import UIKit
 extension LocationsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return locationsViewModel.getLocations().count
+        return locationsViewModel.getLocationsCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LocationCollectionViewCell.identifier, for: indexPath) as? LocationCollectionViewCell else { fatalError("Error LocationCollectionViewCell") }
         
-        let item = locationsViewModel.getLocations()[indexPath.row]
+        let item = locationsViewModel.getLocation(at: indexPath.row)
         cell.configure(with: item.convertToLocationItemView())
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedLocation = locationsViewModel.getLocations()[indexPath.row]
+        let selectedLocation = locationsViewModel.getLocation(at: indexPath.row)
         locationsViewModel.deselectPreviousLocations(except: selectedLocation.location)
         log.info("Diselect items")
         collectionView.reloadData()

@@ -14,7 +14,7 @@ final class LocationsViewModel {
         loadLocations()
     }
     
-    func loadLocations() {
+    private func loadLocations() {
         WeatherCoreDataService.shared.getAllLocations()
         let locations = WeatherCoreDataService.shared.locations
         setState { old in
@@ -22,8 +22,12 @@ final class LocationsViewModel {
         }
     }
     
-    func getLocations() -> [Location] {
-        return locationsScreenState.locations
+    func getLocation(at index: Int) -> Location {
+        return locationsScreenState.locations[index]
+    }
+    
+    func getLocationsCount() -> Int {
+        return locationsScreenState.locations.count
     }
     
     func addLocation(city: String) async throws {
