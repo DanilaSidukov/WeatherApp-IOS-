@@ -13,15 +13,15 @@ class LocationCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
+        setupView()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupUI()
+        setupView()
     }
     
-    private func setupUI() {
+    private func setupView() {
         self.backgroundColor = .clear
         
         self.addSubview(cardView)
