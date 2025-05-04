@@ -51,7 +51,6 @@ final class MainInfoView: UIView {
     }()
     
     func setupView() {
-        self.backgroundColor = .baseBackground
         self.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(locationLabel)
@@ -61,36 +60,27 @@ final class MainInfoView: UIView {
     }
     
     func setupConstraints() {
-            NSLayoutConstraint.activate([
-                locationLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-                locationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-                locationLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-                
-                weatherImage.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 8),
-                weatherImage.centerXAnchor.constraint(equalTo: centerXAnchor),
-                weatherImage.widthAnchor.constraint(equalToConstant: 200),
-                weatherImage.heightAnchor.constraint(equalToConstant: 200),
-                
-                temperatureLabel.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: 8),
-                temperatureLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                
-                temperatureRangeLabel.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor, constant: 4),
-                temperatureRangeLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                temperatureRangeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
-            ])
-        }
-    
-    func configure(with location: LocationItemView) {
-        locationLabel.text = location.location
-        weatherImage.image = location.weatherIcon
-        temperatureLabel.text = location.temperature
-        temperatureRangeLabel.text = location.temperatureRange
+        NSLayoutConstraint.activate([
+            locationLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            locationLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            locationLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            weatherImage.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 8),
+            weatherImage.centerXAnchor.constraint(equalTo: centerXAnchor),
+            weatherImage.widthAnchor.constraint(equalToConstant: 200),
+            weatherImage.heightAnchor.constraint(equalToConstant: 200),
+            
+            temperatureLabel.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: 8),
+            temperatureLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            temperatureRangeLabel.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor, constant: 4),
+            temperatureRangeLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            temperatureRangeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            
+        ])
     }
-}
-
-struct MainInfoViewPreview: UIViewRepresentable {
-    func makeUIView(context: Context) -> MainInfoView {
-        let sampleItem = MainInfoView()
+    
+    func configure() {
         let mockData = LocationItemView(
             location: "Moscow",
             isSelected: true,
@@ -98,7 +88,17 @@ struct MainInfoViewPreview: UIViewRepresentable {
             temperatureRange: "8-16",
             weatherIcon: UIImage(named: "ic_sky_snow_light")!
         )
-        sampleItem.configure(with: mockData)
+        locationLabel.text = mockData.location
+        weatherImage.image = mockData.weatherIcon
+        temperatureLabel.text = mockData.temperature
+        temperatureRangeLabel.text = mockData.temperatureRange
+    }
+}
+
+struct MainInfoViewPreview: UIViewRepresentable {
+    func makeUIView(context: Context) -> MainInfoView {
+        let sampleItem = MainInfoView()
+        sampleItem.configure()
         return sampleItem
     }
     
@@ -109,9 +109,8 @@ struct MainInfoViewPreview: UIViewRepresentable {
 
 #Preview {
     return ZStack {
-        Color.baseBackground
+        Color.clear
         MainInfoViewPreview()
-            .frame(width: 410, height: 500, alignment: .top)
     }
-    .fixedSize()
+    .fixedSize(horizontal: true, vertical: false)
 }

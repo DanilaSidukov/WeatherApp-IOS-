@@ -70,20 +70,20 @@ final class WeatherDescriptionView: UIView {
         ])
     }
     
-    func configure(with weatherDescription: WeatherDescription) {
-        statusLabel.text = weatherDescription.status
-        descriptionLabel.text = weatherDescription.description
+    func configure() {
+        let mockData = WeatherDescription(
+            status: "Today is clear day!",
+            description: "As you can see today is better spend some time somewhere on street"
+        )
+        statusLabel.text = mockData.status
+        descriptionLabel.text = mockData.description
     }
 }
 
 struct WeatherDescriptionViewPreview: UIViewRepresentable {
     func makeUIView(context: Context) -> WeatherDescriptionView {
         let view = WeatherDescriptionView()
-        let mockData = WeatherDescription(
-            status: "Today is clear day!",
-            description: "As you can see today is better spend some time somewhere on street"
-        )
-        view.configure(with: mockData)
+        view.configure()
         return view
     }
     

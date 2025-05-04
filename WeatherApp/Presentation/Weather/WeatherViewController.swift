@@ -12,51 +12,66 @@ class WeatherViewController: UIViewController {
         latitude: 12.4532,
     )
     
-    var collectionView: UICollectionView!
+    let padding: CGFloat = 16
+    
+    private let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let scrollStackViewContainer: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 16
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let mainInfoView = MainInfoView()
+    private let weatherDescriptionView = WeatherDescriptionView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .baseBackground
         setupView()
+        setupScrollView()
+        setupConstraints()
     }
     
     private func setupView() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createWeatherLayout())
-        collectionView.autoresizingMask = [.flexibleHeight, .flexibleHeight, .flexibleHeight]
-        collectionView.backgroundColor = .baseBackground
-        collectionView.register(MainInfoCollectionViewCell.self, forCellWithReuseIdentifier: MainInfoCollectionViewCell.identifier)
-        collectionView.register(WeatherDescriptionCell.self, forCellWithReuseIdentifier: WeatherDescriptionCell.identifier)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        view.addSubview(collectionView)
+        view.addSubview(scrollView)
     }
     
-}
-
-extension WeatherViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+    private func setupScrollView() {
+        scrollView.addSubview(scrollStackViewContainer)
+        mainInfoView.translatesAutoresizingMaskIntoConstraints = false
+        weatherDescriptionView.translatesAutoresizingMaskIntoConstraints = false
+        scrollStackViewContainer.addArrangedSubview(mainInfoView)
+        scrollStackViewContainer.addArrangedSubview(weatherDescriptionView)
+        mainInfoView.configure()
+        weatherDescriptionView.configure()
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch (indexPath.item) {
-            case 0:
-                let mainInfoCell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: MainInfoCollectionViewCell.identifier,
-                    for: indexPath
-                ) as! MainInfoCollectionViewCell
-                mainInfoCell.configure(locationData: testLocation)
-                return mainInfoCell
-            case 1:
-                let weatherDesciptionCell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherDescriptionCell.identifier, for: indexPath) as! WeatherDescriptionCell
-                weatherDesciptionCell.configure()
-                return weatherDesciptionCell
-            default:
-                return UICollectionViewCell()
-            }
+    private func setupConstraints() {
+        view.layoutMargins = UIEdgeInsets(top: 0, left: padding, bottom: padding, right: padding)
+        let layoutMargins = view.layoutMarginsGuide
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: layoutMargins.topAnchor),
+            scrollView.leftAnchor.constraint(equalTo: layoutMargins.leftAnchor),
+            scrollView.rightAnchor.constraint(equalTo: layoutMargins.rightAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: layoutMargins.bottomAnchor),
+            
+            scrollStackViewContainer.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
+            scrollStackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollStackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollStackViewContainer.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
+            scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
     }
+    
 }
 
 struct WeatherViewControllerPreview: UIViewControllerRepresentable {
