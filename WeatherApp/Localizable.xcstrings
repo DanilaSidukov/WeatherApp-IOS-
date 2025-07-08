@@ -86,6 +86,23 @@
         }
       }
     },
+    "hourly_weather" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hourly weather"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Погода на каждый час"
+          }
+        }
+      }
+    },
     "input_location_name" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -1,3 +1,5 @@
+import SwiftyBeaver
+import Foundation
 
 final class LocationsViewModel {
     
@@ -12,6 +14,9 @@ final class LocationsViewModel {
         self.getCoordByGeoUseCase = getCoordByGeoUseCase
         self.getLocationByCoordUseCase = getLocationByCoordUseCase
         loadLocations()
+        Task {
+            await self.updateLocations()
+        }
     }
     
     private func loadLocations() {
@@ -31,7 +36,7 @@ final class LocationsViewModel {
     }
     
     func addLocation(city: String) async throws {
-        let locationAndCoord = try await self.getCoordByGeoUseCase.execute(city: city)
+        let locationAndCoord = await self.getCoordByGeoUseCase.execute(city: city)
         switch locationAndCoord {
             case .success(data: let data):
                 await addLocationByCoord(locationAndCoord: data)
@@ -66,7 +71,7 @@ final class LocationsViewModel {
         }
     }
     
-    private func updateLocation(location: Location) async throws {
+    private func updateLocation(location: Location) async {
         let response = await self.getLocationByCoordUseCase.execute(
             locationName: location.location,
             lat: location.latitude,
@@ -93,9 +98,9 @@ final class LocationsViewModel {
         WeatherCoreDataService.shared.deselectPreviousLocations(except: locationName)
     }
     
-    func updateLocations() async throws {
+    func updateLocations() async {
         for location in locationsScreenState.locations {
-            try await updateLocation(location: location)
+            await updateLocation(location: location)
         }
         loadLocations()
     }

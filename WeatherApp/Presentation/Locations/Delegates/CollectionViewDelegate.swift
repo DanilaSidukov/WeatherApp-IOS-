@@ -20,6 +20,14 @@ extension LocationsViewController: UICollectionViewDelegate, UICollectionViewDat
         locationsViewModel.deselectPreviousLocations(except: selectedLocation.location)
         log.info("Diselect items")
         collectionView.reloadData()
+        let locationData = selectedLocation.convertToLocationData()
+        let weatherVM = WeatherViewModel(
+            getHourlyWeatherUseCase: GetHourlyWeatherUseCase(),
+            locationData: locationData
+        )
+        let weatherVC = WeatherViewController()
+        weatherVC.weatherViewModel = weatherVM
+        navigationController?.pushViewController(weatherVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

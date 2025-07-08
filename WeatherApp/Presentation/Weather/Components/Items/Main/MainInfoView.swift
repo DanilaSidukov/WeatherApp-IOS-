@@ -17,7 +17,7 @@ final class MainInfoView: UIView {
     
     private let locationLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 20)
         label.textColor = .primaryText
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -80,7 +80,17 @@ final class MainInfoView: UIView {
         ])
     }
     
-    func configure() {
+    func configure(locationData: LocationItemView) {
+        locationLabel.text = locationData.location
+        weatherImage.image = locationData.weatherIcon
+        temperatureLabel.text = locationData.temperature
+        temperatureRangeLabel.text = locationData.temperatureRange
+    }
+}
+
+struct MainInfoViewPreview: UIViewRepresentable {
+    func makeUIView(context: Context) -> MainInfoView {
+        let sampleItem = MainInfoView()
         let mockData = LocationItemView(
             location: "Moscow",
             isSelected: true,
@@ -88,17 +98,7 @@ final class MainInfoView: UIView {
             temperatureRange: "8-16",
             weatherIcon: UIImage(named: "ic_sky_snow_light")!
         )
-        locationLabel.text = mockData.location
-        weatherImage.image = mockData.weatherIcon
-        temperatureLabel.text = mockData.temperature
-        temperatureRangeLabel.text = mockData.temperatureRange
-    }
-}
-
-struct MainInfoViewPreview: UIViewRepresentable {
-    func makeUIView(context: Context) -> MainInfoView {
-        let sampleItem = MainInfoView()
-        sampleItem.configure()
+        sampleItem.configure(locationData: mockData)
         return sampleItem
     }
     

@@ -119,7 +119,7 @@ final class LocationCardViewCell: UIView {
     private let weatherStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.alignment = .fill
+        stackView.alignment = .center
         stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -189,7 +189,7 @@ final class LocationCardViewCell: UIView {
             weatherIcon.widthAnchor.constraint(equalToConstant: 32),
             weatherIcon.heightAnchor.constraint(equalToConstant: 32),
             
-            temperatureStackView.heightAnchor.constraint(equalToConstant: 48),
+            temperatureStackView.heightAnchor.constraint(equalToConstant: 52),
             temperatureStackView.leftAnchor.constraint(equalTo: weatherStackView.leftAnchor),
             temperatureStackView.topAnchor.constraint(equalTo: weatherStackView.topAnchor),
             temperatureStackView.bottomAnchor.constraint(equalTo: weatherStackView.bottomAnchor),

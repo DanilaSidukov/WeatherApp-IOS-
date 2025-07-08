@@ -13,3 +13,25 @@ struct LocationWeatherData: Codable {
     let daily_units: DailyUnits?
     let daily: Daily?
 }
+
+struct CurrentUnits: Codable {
+    let time: String?
+    let interval: String?
+    let temperature2m: String?
+    let rain: String?
+    let snowfall: String?
+    let cloudCover: String?
+    let precipitation: String?
+}
+
+struct Daily: Codable {
+    let time: [String]?
+    let temperature_2m_min: [Double]?
+    let temperature_2m_max: [Double]?
+}
+
+struct DailyUnits: Codable {
+    let time: String?
+    let temperature_2m_min: String?
+    let temperature_2m_max: String?
+}

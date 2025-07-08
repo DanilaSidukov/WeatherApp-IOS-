@@ -20,15 +20,8 @@ final class WeatherDescriptionView: UIView {
     }
     
     override func layoutSubviews() {
-       let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: radius)
-        layer.backgroundColor = UIColor(resource: .container).cgColor
-        layer.masksToBounds = false
-        layer.shadowColor = UIColor.black.cgColor.copy(alpha: 0.1)
-        layer.shadowOffset = CGSize(width: 0, height: 3);
-        layer.shadowOpacity = 0.3
-        layer.borderColor = UIColor.clear.cgColor
-        layer.cornerRadius = radius
-        layer.shadowPath = shadowPath.cgPath
+        let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: radius)
+        layer.setCorners(radis: radius, shadowPath: shadowPath)
     }
     
     private let statusLabel: UILabel = {

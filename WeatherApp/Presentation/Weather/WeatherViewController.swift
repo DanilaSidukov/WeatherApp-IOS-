@@ -2,14 +2,10 @@ import UIKit
 import SwiftUI
 
 class WeatherViewController: UIViewController {
-
-    let testLocation = LocationData(
-        location: "Moscow",
-        temperature: "12",
-        temperatureRange: "8-16",
-        weatherIcon: "ic_snow",
-        longitude: 43.2312,
-        latitude: 12.4532,
+    
+    var weatherViewModel = WeatherViewModel(
+        getHourlyWeatherUseCase: GetHourlyWeatherUseCase(),
+        locationData: LocationData()
     )
     
     let padding: CGFloat = 16
@@ -30,6 +26,16 @@ class WeatherViewController: UIViewController {
     
     private let mainInfoView = MainInfoView()
     private let weatherDescriptionView = WeatherDescriptionView()
+    private var hourlyWeatherListView: HourlyWeatherListView?
+    private let hourlyWeatherCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .container
+        collectionView.register(HourlyWeatherViewCell.self, forCellWithReuseIdentifier: HourlyWeatherViewCell.identifier)
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +44,21 @@ class WeatherViewController: UIViewController {
         setupView()
         setupScrollView()
         setupConstraints()
+        
+        weatherViewModel.onStateChange = { [weak self] newState in
+            DispatchQueue.main.async {
+                self?.hourlyWeatherCollectionView.reloadData()
+            }
+        }
     }
-    
+}
+
+private extension WeatherViewController {
     private func setupView() {
+        hourlyWeatherListView = HourlyWeatherListView(collectionView: hourlyWeatherCollectionView)
+        hourlyWeatherCollectionView.dataSource = self
+        hourlyWeatherCollectionView.delegate = self
+        hourlyWeatherCollectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
     }
     
@@ -50,10 +68,15 @@ class WeatherViewController: UIViewController {
         weatherDescriptionView.translatesAutoresizingMaskIntoConstraints = false
         scrollStackViewContainer.addArrangedSubview(mainInfoView)
         scrollStackViewContainer.addArrangedSubview(weatherDescriptionView)
-        mainInfoView.configure()
+        if let listView = hourlyWeatherListView {
+            scrollStackViewContainer.addArrangedSubview(listView)
+        }
+        mainInfoView.configure(locationData: weatherViewModel.weatherState.locationData.convertToLocationItemView())
         weatherDescriptionView.configure()
     }
-    
+}
+
+private extension WeatherViewController {
     private func setupConstraints() {
         view.layoutMargins = UIEdgeInsets(top: 0, left: padding, bottom: padding, right: padding)
         let layoutMargins = view.layoutMarginsGuide
@@ -68,10 +91,12 @@ class WeatherViewController: UIViewController {
             scrollStackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
             scrollStackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             scrollStackViewContainer.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
-            scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
         ])
+        if let listView = hourlyWeatherListView {
+            listView.heightAnchor.constraint(equalToConstant: 126).isActive = true
+        }
     }
-    
 }
 
 struct WeatherViewControllerPreview: UIViewControllerRepresentable {

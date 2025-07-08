@@ -1,4 +1,3 @@
-
 struct LocationData {
     let location: String?
     let temperature: String?
