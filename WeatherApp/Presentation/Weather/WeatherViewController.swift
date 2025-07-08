@@ -48,6 +48,9 @@ class WeatherViewController: UIViewController {
         weatherViewModel.onStateChange = { [weak self] newState in
             DispatchQueue.main.async {
                 self?.hourlyWeatherCollectionView.reloadData()
+                self?.hourlyWeatherListView?.isListVisible(
+                    hourlyState: newState.hourlyState
+                )
             }
         }
     }

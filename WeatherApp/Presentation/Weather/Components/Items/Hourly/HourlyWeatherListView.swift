@@ -6,6 +6,8 @@ final class HourlyWeatherListView: UIView {
     private let containerView = UIView()
     private let radius: CGFloat = 8
     
+    private var collectionView: UICollectionView!
+    
     private let hourlyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
@@ -17,26 +19,40 @@ final class HourlyWeatherListView: UIView {
         return label
     }()
     
-//    private let loaderIndicator: UIActivityIndicatorView = {
-//        let indicator = UIActivityIndicatorView(style: .medium)
-//        indicator.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-//        indicator.translatesAutoresizingMaskIntoConstraints = false
-//        return indicator
-//    }()
+    private let loaderIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        return indicator
+    }()
+    
+    private let errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 14)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
+        return label
+    }()
     
     init(collectionView: UICollectionView) {
         super.init(frame: .zero)
-        containerView.layer.cornerRadius = radius
-        containerView.clipsToBounds = true
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView = collectionView
+        self.containerView.layer.cornerRadius = radius
+        self.containerView.clipsToBounds = true
+        self.containerView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.isHidden = true
         
-//        loaderIndicator.center = self.center
-//        containerView.addSubview(loaderIndicator)
-        containerView.addSubview(collectionView)
+        containerView.addSubview(loaderIndicator)
+        containerView.addSubview(self.collectionView)
         containerView.addSubview(hourlyLabel)
+        containerView.addSubview(errorLabel)
         addSubview(containerView)
-        setupConstraints(collectionView: collectionView)
+        setupConstraints()
     }
     
     override func layoutSubviews() {
@@ -45,7 +61,7 @@ final class HourlyWeatherListView: UIView {
         layer.setCorners(radis: radius, shadowPath: shadowPath)
     }
     
-    private func setupConstraints(collectionView: UICollectionView) {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: topAnchor),
             containerView.leftAnchor.constraint(equalTo: leftAnchor),
@@ -56,11 +72,39 @@ final class HourlyWeatherListView: UIView {
             hourlyLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 16),
             hourlyLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor),
             
-            collectionView.topAnchor.constraint(equalTo: hourlyLabel.bottomAnchor, constant: -16),
-            collectionView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: hourlyLabel.bottomAnchor, constant: -16),
+            self.collectionView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+            self.collectionView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            loaderIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            loaderIndicator.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            errorLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+            errorLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+            errorLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+            errorLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
+    }
+    
+    func isListVisible(hourlyState: HourlyState) {
+        switch hourlyState {
+            case .data:
+                self.collectionView.isHidden = false
+                self.loaderIndicator.isHidden = true
+                self.errorLabel.isHidden = true
+                self.loaderIndicator.stopAnimating()
+            case .loading:
+                self.loaderIndicator.isHidden = false
+                self.collectionView.isHidden = true
+                self.errorLabel.isHidden = true
+            case .error(let message):
+                self.errorLabel.isHidden = false
+                self.loaderIndicator.isHidden = true
+                self.collectionView.isHidden = true
+                errorLabel.text = message
+                self.loaderIndicator.stopAnimating()
+        }
     }
     
     required init?(coder: NSCoder) {

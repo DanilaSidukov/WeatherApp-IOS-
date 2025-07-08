@@ -2,7 +2,7 @@
 struct WeatherState {
     
     var locationData: LocationData = LocationData()
-    var hourlyList: [HourlyWeather] = []
+    var hourlyState: HourlyState = HourlyState.loading
 }
 
 extension WeatherState {
@@ -10,19 +10,25 @@ extension WeatherState {
     init(
         locationData: LocationData,
         forCopyInit: Void? = nil,
-        hourlyList: [HourlyWeather]
+        hourlyState: HourlyState,
     ) {
         self.locationData = locationData
-        self.hourlyList = hourlyList
+        self.hourlyState = hourlyState
     }
     
     func copy(
         locationData: LocationData? = nil,
-        hourlyList: [HourlyWeather]? = nil
+        hourlyState: HourlyState? = nil
     ) -> WeatherState {
         WeatherState(
             locationData: locationData ?? self.locationData,
-            hourlyList: hourlyList ?? self.hourlyList
+            hourlyState: hourlyState ?? self.hourlyState
         )
     }
+}
+
+enum HourlyState {
+    case loading
+    case error(String)
+    case data([HourlyWeather])
 }

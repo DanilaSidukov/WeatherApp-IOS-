@@ -34,10 +34,12 @@ final class WeatherViewModel {
                 switch response {
                 case .success(data: let list):
                     self.setState { old in
-                        old.copy(hourlyList: list)
+                        old.copy(hourlyState: HourlyState.data(list))
                     }
                 case .error(message: let message):
-                    print("Error: \(message)")
+                    self.setState { old in
+                        old.copy(hourlyState: HourlyState.error(message))
+                    }
                 }
             }
         }
