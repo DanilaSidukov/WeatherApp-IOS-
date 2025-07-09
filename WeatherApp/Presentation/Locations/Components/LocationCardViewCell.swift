@@ -6,7 +6,7 @@ class LocationCollectionViewCell: UICollectionViewCell {
 
     private let cardView: LocationCardViewCell = {
         let view = LocationCardViewCell()
-        view.backgroundColor = .white
+        view.backgroundColor = .container
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

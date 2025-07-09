@@ -47,7 +47,7 @@ final class LocationCardViewCell: UIView {
     }
     
     private func setupView() {
-        backgroundColor = .white
+        self.backgroundColor = .container
         addSubview(locationLabel)
         addSubview(temperatureLabel)
         addSubview(temperatureRangeLabel)
@@ -72,7 +72,7 @@ final class LocationCardViewCell: UIView {
     private let locationLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = .black
+        label.textColor = .primaryText
         label.numberOfLines = 1
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -147,7 +147,7 @@ final class LocationCardViewCell: UIView {
     private let temperatureRangeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Staatliches-Regular", size: 13)
-        label.textColor = .secondaryText
+        label.textColor = .black
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

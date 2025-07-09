@@ -26,6 +26,7 @@ class WeatherViewController: UIViewController {
     
     private let mainInfoView = MainInfoView()
     private let weatherDescriptionView = WeatherDescriptionView()
+    private let todayForecastView = TodayForecastView()
     private var hourlyWeatherListView: HourlyWeatherListView?
     private let hourlyWeatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -63,17 +64,19 @@ private extension WeatherViewController {
         hourlyWeatherCollectionView.delegate = self
         hourlyWeatherCollectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
+        mainInfoView.translatesAutoresizingMaskIntoConstraints = false
+        weatherDescriptionView.translatesAutoresizingMaskIntoConstraints = false
+        todayForecastView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func setupScrollView() {
-        scrollView.addSubview(scrollStackViewContainer)
-        mainInfoView.translatesAutoresizingMaskIntoConstraints = false
-        weatherDescriptionView.translatesAutoresizingMaskIntoConstraints = false
         scrollStackViewContainer.addArrangedSubview(mainInfoView)
         scrollStackViewContainer.addArrangedSubview(weatherDescriptionView)
+        scrollView.addSubview(scrollStackViewContainer)
         if let listView = hourlyWeatherListView {
             scrollStackViewContainer.addArrangedSubview(listView)
         }
+        scrollStackViewContainer.addArrangedSubview(todayForecastView)
         mainInfoView.configure(locationData: weatherViewModel.weatherState.locationData.convertToLocationItemView())
         weatherDescriptionView.configure()
     }
@@ -95,6 +98,8 @@ private extension WeatherViewController {
             scrollStackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             scrollStackViewContainer.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
             scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            todayForecastView.heightAnchor.constraint(equalToConstant: 250)
         ])
         if let listView = hourlyWeatherListView {
             listView.heightAnchor.constraint(equalToConstant: 126).isActive = true
